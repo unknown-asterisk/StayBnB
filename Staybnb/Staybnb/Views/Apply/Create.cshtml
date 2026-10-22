@@ -4,6 +4,9 @@
 <form method="post" enctype="multipart/form-data"><div asp-validation-summary="All" class="text-danger"></div>
 <div class="mb-3"><label>Title</label><input asp-for="Title" class="form-control"/></div>
 <div class="mb-3"><label>Description</label><textarea asp-for="Description" class="form-control" rows="4"></textarea></div>
+<div class="mb-3"><label>Amenities</label><div class="row">
+@foreach (var a in (List<Amenity>)ViewBag.Amenities) { <div class="col-6 col-md-4"><label><input type="checkbox" name="amenityIds" value="@a.Id"/> <i class="bi @a.IconClass"></i> @a.Name</label></div> }
+</div></div>
 <div class="row"><div class="col-md-6 mb-3"><label>City</label><input asp-for="City" class="form-control"/></div><div class="col-md-6 mb-3"><label>Address</label><input asp-for="Address" class="form-control"/></div></div>
 <div class="row"><div class="col-md-3 mb-3"><label>Price / night (R)</label><input asp-for="PricePerNight" class="form-control"/></div><div class="col-md-3 mb-3"><label>Cleaning fee (R)</label><input asp-for="CleaningFee" class="form-control"/></div>
 <div class="col-md-3 mb-3"><label>Max guests</label><input asp-for="MaxGuests" class="form-control"/></div>
