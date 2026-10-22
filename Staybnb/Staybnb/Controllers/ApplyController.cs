@@ -11,7 +11,12 @@ namespace Staybnb.Controllers;
 public class ApplyController(ApplicationDbContext db, IWebHostEnvironment env, IActivityLogger log, INotifier notifier, UserManager<ApplicationUser> um) : Controller
 {
     string Uid => User.FindFirstValue(ClaimTypes.NameIdentifier);
-    [HttpGet] public IActionResult Create() => View(new ApplyVM());
+    [HttpGet]
+public async Task<IActionResult> Create()
+{
+    ViewBag.Amenities = await db.Amenities.ToListAsync();
+    return View(new ApplyVM());
+}
     [HttpPost]
     public async Task<IActionResult> Create(ApplyVM vm, List<IFormFile> images)
     {
