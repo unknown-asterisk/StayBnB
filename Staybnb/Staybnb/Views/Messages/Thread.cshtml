@@ -1,0 +1,5 @@
+@model List<Message>
+@{ ViewData["Title"] = "Conversation"; ApplicationUser other = ViewBag.Other; var me = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value; }
+<h2>Conversation with @other.FullName</h2>
+<div class="border rounded p-3 mb-3" style="max-height:420px;overflow:auto">@foreach (var m in Model) { <div class="mb-2 @(m.SenderId == me ? "text-end" : "")"><span class="d-inline-block px-3 py-2 rounded @(m.SenderId == me ? "bg-danger text-white" : "bg-light")">@m.Content</span><br/><small class="text-muted">@m.Timestamp.ToString("dd MMM HH:mm")</small></div> }</div>
+<form asp-action="Send" method="post" class="d-flex gap-2"><input type="hidden" name="receiverId" value="@other.Id"/><input name="content" class="form-control" placeholder="Write a message" required/><button class="btn btn-brand">Send</button></form>

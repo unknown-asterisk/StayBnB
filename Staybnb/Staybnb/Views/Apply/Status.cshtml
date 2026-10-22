@@ -1,0 +1,7 @@
+@model List<HostApplication>
+@{ ViewData["Title"] = "Application Status"; }
+<h2>Host application status</h2>
+@if (!Model.Any()) { <p>No applications yet. <a asp-action="Create">Apply now</a>.</p> }
+@foreach (var a in Model) { <div class="card mb-3"><div class="card-body d-flex align-items-center"><img src="@a.Property.Images.FirstOrDefault()?.ImageUrl" width="90" height="70" class="rounded me-3" style="object-fit:cover"/>
+<div><strong>@a.Property.Title</strong><br/><small class="text-muted">Applied @a.AppliedAt.ToString("yyyy-MM-dd")</small></div>
+<span class="badge ms-auto @(a.Status==ApplicationStatus.Approved?"bg-success":a.Status==ApplicationStatus.Rejected?"bg-danger":"bg-warning text-dark")">@a.Status</span></div></div> }

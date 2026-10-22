@@ -1,0 +1,8 @@
+@model List<GuestCheckIn>
+@{ ViewData["Title"] = "Guest check-ins"; }
+<h2>Guest check-ins</h2>
+@foreach (var c in Model) { <div class="card mb-3"><div class="card-body"><div class="d-flex"><div><strong>@c.Booking.Guest.FullName</strong> – @c.Booking.Property.Title<br/><small>@c.Booking.CheckInDate.ToString("dd MMM") – @c.Booking.CheckOutDate.ToString("dd MMM")</small></div><span class="badge bg-info text-dark ms-auto align-self-start">@c.Status</span></div>
+@foreach (var d in c.Documents) { <div class="mt-2 d-flex align-items-center"><a href="/uploads/docs/@d.FileName" target="_blank">@d.DocumentType</a><span class="badge ms-2 bg-secondary">@d.Status</span>
+@if (d.Status == DocumentStatus.Pending) { <form asp-action="VerifyDocument" method="post" class="ms-auto"><input type="hidden" name="id" value="@d.Id"/><button name="approve" value="true" class="btn btn-sm btn-success">Verify</button> <button name="approve" value="false" class="btn btn-sm btn-outline-danger">Reject</button></form> }</div> }
+@if (c.Status != CheckInStatus.Completed && c.Documents.Any(d => d.Status == DocumentStatus.Approved)) { <form asp-action="ConfirmCheckIn" method="post" class="mt-3"><input type="hidden" name="checkInId" value="@c.Id"/><button class="btn btn-brand btn-sm">Confirm check-in</button></form> }</div></div> }
+@if (!Model.Any()) { <p class="text-muted">No guests have started check-in yet.</p> }

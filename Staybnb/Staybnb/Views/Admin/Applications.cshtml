@@ -1,0 +1,7 @@
+@model List<HostApplication>
+@{ ViewData["Title"] = "Host applications"; }
+<h2>Host / property applications</h2>
+@foreach (var a in Model) { <div class="card mb-3"><div class="card-body"><div class="d-flex"><img src="@a.Property.Images.FirstOrDefault()?.ImageUrl" width="120" height="90" class="rounded me-3" style="object-fit:cover"/>
+<div><h5>@a.Property.Title</h5>@a.ApplicationUser.FullName (@a.ApplicationUser.Email)<br/>@a.Property.City · R @a.Property.PricePerNight.ToString("N2")/night · @a.Property.Images.Count image(s)<br/><small>@a.Property.Description</small></div>
+<div class="ms-auto text-end"><span class="badge bg-secondary mb-2">@a.Status</span>
+@if (a.Status == ApplicationStatus.Pending) { <form asp-action="Decide" method="post"><input type="hidden" name="id" value="@a.Id"/><button name="approve" value="true" class="btn btn-sm btn-success">Approve</button> <button name="approve" value="false" class="btn btn-sm btn-outline-danger">Reject</button></form> }</div></div></div></div> }

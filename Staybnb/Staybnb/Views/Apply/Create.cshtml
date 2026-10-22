@@ -1,0 +1,12 @@
+@model ApplyVM
+@{ ViewData["Title"] = "Become a Host"; }
+<div class="col-md-8 mx-auto"><h2>Become a Host</h2><p class="text-muted">Tell us about your property. At least one image is required.</p>
+<form method="post" enctype="multipart/form-data"><div asp-validation-summary="All" class="text-danger"></div>
+<div class="mb-3"><label>Title</label><input asp-for="Title" class="form-control"/></div>
+<div class="mb-3"><label>Description</label><textarea asp-for="Description" class="form-control" rows="4"></textarea></div>
+<div class="row"><div class="col-md-6 mb-3"><label>City</label><input asp-for="City" class="form-control"/></div><div class="col-md-6 mb-3"><label>Address</label><input asp-for="Address" class="form-control"/></div></div>
+<div class="row"><div class="col-md-3 mb-3"><label>Price / night (R)</label><input asp-for="PricePerNight" class="form-control"/></div><div class="col-md-3 mb-3"><label>Cleaning fee (R)</label><input asp-for="CleaningFee" class="form-control"/></div>
+<div class="col-md-3 mb-3"><label>Max guests</label><input asp-for="MaxGuests" class="form-control"/></div>
+<div class="col-md-3 mb-3"><label>Type</label><select asp-for="PropertyType" class="form-select"><option>Apartment</option><option>House</option><option>Villa</option><option>Cabin</option><option>Cottage</option></select></div></div>
+<div class="mb-3"><label>Property images (min. 1)</label><input type="file" name="images" multiple accept="image/*" class="form-control" required/></div>
+<button class="btn btn-brand">Submit application</button></form></div>

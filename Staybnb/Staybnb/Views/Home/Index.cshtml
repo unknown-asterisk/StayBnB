@@ -1,0 +1,15 @@
+@model List<HostProperty>
+@{ ViewData["Title"] = "Explore"; }
+<form method="get" class="row g-2 mb-4"><div class="col-md-4"><input name="city" value="@ViewBag.City" class="form-control" placeholder="Anywhere (city)"/></div>
+<div class="col-md-3"><select name="type" class="form-select"><option value="">Any type</option>@foreach (string t in ViewBag.Types) { <option value="@t" selected="@(t == ViewBag.Type)">@t</option> }</select></div>
+<div class="col-md-2"><button class="btn btn-brand w-100"><i class="bi bi-search"></i> Search</button></div></form>
+<h3>Relax. Unwind. Choose your next stay.</h3>
+<div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mt-1">
+@foreach (var p in Model) {
+  <div class="col"><a asp-controller="Properties" asp-action="Details" asp-route-id="@p.Id" class="text-decoration-none text-dark"><div class="card prop-card">
+    <img class="card-img-top" src="@(p.Images.FirstOrDefault()?.ImageUrl)" alt="@p.Title"/>
+    <div class="card-body px-0"><div class="d-flex justify-content-between"><strong>@p.City</strong><span><i class="bi bi-star-fill text-danger"></i> @(p.Reviews.Any() ? p.Reviews.Average(r => r.Rating).ToString("0.0") : "New")</span></div>
+    <div class="text-muted">@p.Title</div><div><strong>R @p.PricePerNight.ToString("N0")</strong> night</div></div></div></a></div>
+}
+@if (!Model.Any()) { <p class="text-muted">No listings match your search.</p> }
+</div>

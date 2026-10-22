@@ -1,0 +1,28 @@
+@model HostProperty
+@{ ViewData["Title"] = Model.Title; var avg = Model.Reviews.Any() ? Model.Reviews.Average(r => r.Rating) : 0; }
+<h2>@Model.Title</h2><p class="text-muted"><i class="bi bi-geo-alt"></i> @Model.City, @Model.Address · @Model.MaxGuests guests · <i class="bi bi-star-fill text-danger"></i> @avg.ToString("0.0") (@Model.Reviews.Count reviews)</p>
+<div class="row g-2 mb-4">@foreach (var i in Model.Images.Take(3)) { <div class="col-md"><img src="@i.ImageUrl" class="img-fluid rounded" style="height:300px;width:100%;object-fit:cover"/></div> }</div>
+<div class="row"><div class="col-lg-8">
+  <div class="d-flex align-items-center mb-3"><div><strong>Hosted by @Model.Host.FullName</strong> <span class="badge bg-danger">Verified Host</span></div>
+    @if (User.IsInRole("Guest")) { <a class="btn btn-outline-secondary btn-sm ms-auto" asp-controller="Messages" asp-action="Thread" asp-route-userId="@Model.HostId">Contact host</a> }</div>
+  <p>@Model.Description</p>
+  @if (Model.Amenities.Any()) { <h5>Amenities</h5><div class="row">@foreach (var a in Model.Amenities) { <div class="col-6"><i class="bi @a.IconClass"></i> @a.Name</div> }</div> }
+  <h5 class="mt-4">Reviews</h5>@foreach (var r in Model.Reviews) { <div class="mb-2"><strong>@r.Reviewer.FullName</strong> · @r.Rating/5<br/>@r.Comment</div> }
+</div>
+<div class="col-lg-4"><div class="card shadow-sm"><div class="card-body">
+  <h4>R @Model.PricePerNight.ToString("N0") <small class="text-muted fs-6">/ night</small></h4>
+  @if (User.IsInRole("Guest")) {
+    <form asp-controller="Guest" asp-action="Book" method="post"><input type="hidden" name="propertyId" value="@Model.Id"/>
+    <div class="row g-2 mb-2"><div class="col"><label class="small">Check-in</label><input id="ci" type="date" name="checkIn" class="form-control" required/></div><div class="col"><label class="small">Check-out</label><input id="co" type="date" name="checkOut" class="form-control" required/></div></div>
+    <label class="small">Guests (max @Model.MaxGuests)</label><input id="gu" type="number" name="guests" value="1" min="1" max="@Model.MaxGuests" class="form-control mb-3"/>
+    <div class="small" id="sum"></div><button class="btn btn-brand w-100 mt-2">Request to book</button></form>
+  } else if (!User.Identity.IsAuthenticated) { <a class="btn btn-brand w-100" asp-controller="Account" asp-action="Login">Log in to book</a> }
+  else { <p class="text-muted">Only Guest accounts can book.</p> }
+</div></div></div></div>
+@section Scripts { <script>
+const price=@Model.PricePerNight.ToString(System.Globalization.CultureInfo.InvariantCulture), clean=@Model.CleaningFee.ToString(System.Globalization.CultureInfo.InvariantCulture), rate=0.12;
+const ci=document.getElementById('ci'),co=document.getElementById('co'),sum=document.getElementById('sum');
+function calc(){ if(!ci||!ci.value||!co.value)return; const n=Math.round((new Date(co.value)-new Date(ci.value))/864e5); if(n<1){sum.textContent='';return;}
+ const sub=price*n, svc=Math.round(sub*rate*100)/100; sum.innerHTML=`R ${price} × ${n} nights: R ${sub.toFixed(2)}<br>Cleaning fee: R ${clean.toFixed(2)}<br>Service fee: R ${svc.toFixed(2)}<br><strong>Total: R ${(sub+clean+svc).toFixed(2)}</strong>`; }
+ci?.addEventListener('change',calc); co?.addEventListener('change',calc);
+</script> }

@@ -1,0 +1,7 @@
+@model List<Notification>
+@{ ViewData["Title"] = "Notifications"; }
+<div class="d-flex mb-3"><h2>Notifications <span class="badge bg-danger fs-6">@Model.Count(n => !n.IsRead) new</span></h2>
+<form asp-action="MarkAllRead" method="post" class="ms-auto"><button class="btn btn-outline-secondary btn-sm">Mark all read</button></form></div>
+<div class="list-group">@foreach (var n in Model) { <a class="list-group-item list-group-item-action @(n.IsRead ? "" : "bg-light fw-semibold")" asp-action="Open" asp-route-id="@n.Id">
+<div class="d-flex"><span>@n.Title</span><small class="ms-auto">@n.CreatedAt.ToString("dd MMM HH:mm")</small></div><div class="small text-muted">@n.Body</div></a> }</div>
+@if (!Model.Any()) { <p class="text-muted">You're all caught up.</p> }

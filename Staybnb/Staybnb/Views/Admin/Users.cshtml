@@ -1,0 +1,7 @@
+@model List<ApplicationUser>
+@{ ViewData["Title"] = "User management"; var roles = (Dictionary<string, IList<string>>)ViewBag.Roles; }
+<h2>User management</h2><form class="mb-3 d-flex gap-2"><input name="search" value="@ViewBag.Search" class="form-control w-auto" placeholder="Search name/email"/><button class="btn btn-brand">Search</button></form>
+<table class="table align-middle"><thead><tr><th>Name</th><th>Email</th><th>Roles</th><th></th></tr></thead><tbody>
+@foreach (var u in Model) { <tr><td>@u.FullName</td><td>@u.Email</td><td>@string.Join(", ", roles[u.Id])</td>
+<td>@if (roles[u.Id].Contains("Guest")) { <form asp-action="Promote" method="post"><input type="hidden" name="userId" value="@u.Id"/><button class="btn btn-sm btn-outline-danger">Promote to Admin</button></form> }</td></tr> }
+</tbody></table>

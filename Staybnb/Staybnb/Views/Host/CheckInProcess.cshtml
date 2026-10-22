@@ -1,0 +1,5 @@
+@model CheckInProcess
+@{ ViewData["Title"] = "Check-in process"; HostProperty p = ViewBag.Property; }
+<h2>Check-in process: @p.Title</h2><p class="text-muted">Define the rules and required documents guests must follow. One step per line.</p>
+<form method="post" class="col-md-7"><div class="mb-3"><label>Title</label><input name="title" value="@Model.Title" class="form-control" required/></div>
+<div class="mb-3"><label>Steps / rules / required documents</label><textarea name="steps" rows="8" class="form-control">@ViewBag.Steps</textarea></div><button class="btn btn-brand">Save</button></form>

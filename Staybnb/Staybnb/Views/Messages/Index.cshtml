@@ -1,0 +1,6 @@
+@model List<Message>
+@{ ViewData["Title"] = "Inbox"; var me = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value; }
+<h2>Inbox</h2>
+<div class="list-group">@foreach (var m in Model) { var other = m.SenderId == me ? m.Receiver : m.Sender;
+<a class="list-group-item list-group-item-action @(m.ReceiverId == me && !m.IsRead ? "fw-bold" : "")" asp-action="Thread" asp-route-userId="@other.Id"><div class="d-flex"><span>@other.FullName</span><small class="ms-auto">@m.Timestamp.ToString("dd MMM HH:mm")</small></div><div class="text-truncate text-muted">@m.Content</div></a> }</div>
+@if (!Model.Any()) { <p class="text-muted">No messages yet. Use "Contact host" on a property page to start a conversation.</p> }

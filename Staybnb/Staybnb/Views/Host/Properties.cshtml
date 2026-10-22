@@ -1,0 +1,7 @@
+@model List<HostProperty>
+@{ ViewData["Title"] = "My Properties"; }
+<h2>My properties</h2>
+@foreach (var p in Model) { <div class="card mb-3"><div class="card-body d-flex align-items-center"><img src="@p.Images.FirstOrDefault()?.ImageUrl" width="140" height="100" class="rounded me-3" style="object-fit:cover"/>
+<div><h5>@p.Title</h5><div class="text-muted">@p.City · R @p.PricePerNight.ToString("N2")/night · @p.Bookings.Count booking(s)</div><span class="badge @(p.IsActive?"bg-success":"bg-secondary")">@(p.IsActive?"Active":"Inactive")</span></div>
+<div class="ms-auto"><a class="btn btn-sm btn-outline-secondary" asp-action="CheckInProcess" asp-route-propertyId="@p.Id">Check-in process</a>
+<form asp-action="Toggle" asp-route-id="@p.Id" method="post" class="d-inline"><button class="btn btn-sm @(p.IsActive?"btn-danger":"btn-success")">@(p.IsActive?"Deactivate":"Activate")</button></form></div></div></div> }

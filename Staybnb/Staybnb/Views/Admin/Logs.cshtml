@@ -1,0 +1,6 @@
+@model List<ActivityLog>
+@{ ViewData["Title"] = "Activity logs"; }
+<h2>Activity log</h2><form class="mb-3"><select name="type" class="form-select w-auto d-inline" onchange="this.form.submit()"><option value="">All types</option>
+@foreach (var t in Enum.GetValues<ActivityType>()) { <option value="@t" selected="@(ViewBag.Type == t)">@t</option> }</select></form>
+<table class="table table-sm"><thead><tr><th>When</th><th>User</th><th>Type</th><th>Action</th></tr></thead><tbody>
+@foreach (var l in Model) { <tr><td>@l.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td><td>@l.User?.Email</td><td>@l.ActivityType</td><td>@l.Action</td></tr> }</tbody></table>

@@ -1,0 +1,11 @@
+@using System.Text.Json
+@model Booking
+@{ ViewData["Title"] = "Check-in"; var steps = JsonSerializer.Deserialize<List<string>>(Model.GuestCheckIn.CheckInProcess.StepsJson); }
+<h2>Check-in: @Model.Property.Title</h2><p>Status: <span class="badge bg-info text-dark">@Model.GuestCheckIn.Status</span></p>
+<div class="row"><div class="col-md-6"><h5>Step 1 – Read the host's check-in process</h5><p class="text-muted">@Model.GuestCheckIn.CheckInProcess.Title</p><ol>@foreach (var s in steps) { <li>@s</li> }</ol></div>
+<div class="col-md-6"><h5>Step 2 – Upload your ID or Passport</h5>
+<form asp-action="UploadDocument" method="post" enctype="multipart/form-data"><input type="hidden" name="bookingId" value="@Model.Id"/>
+<select name="documentType" class="form-select mb-2"><option>ID</option><option>Passport</option></select><input type="file" name="file" class="form-control mb-2" required/><button class="btn btn-brand">Upload</button></form>
+<h5 class="mt-4">Step 3 – Host verification</h5>
+@foreach (var d in Model.GuestCheckIn.Documents) { <div>@d.DocumentType – <span class="badge @(d.Status==DocumentStatus.Approved?"bg-success":d.Status==DocumentStatus.Rejected?"bg-danger":"bg-warning text-dark")">@d.Status</span></div> }
+@if (Model.Status == BookingStatus.CheckedIn) { <div class="alert alert-success mt-3">You are checked in. Enjoy your stay!</div> }</div></div>

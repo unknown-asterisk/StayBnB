@@ -1,0 +1,10 @@
+@{ ViewData["Title"] = "Admin Dashboard"; }
+<h2>Dashboard overview</h2>
+<div class="row g-3 mb-4">
+<div class="col-md-2"><div class="card"><div class="card-body"><h3>@ViewBag.Users</h3>Total Users</div></div></div>
+<div class="col-md-2"><div class="card"><div class="card-body"><h3 class="text-warning">@ViewBag.PendingApps</h3>Pending Host Apps</div></div></div>
+<div class="col-md-2"><div class="card"><div class="card-body"><h3>@ViewBag.ActiveProps</h3>Active Properties</div></div></div>
+<div class="col-md-2"><div class="card"><div class="card-body"><h3>R @(((decimal)ViewBag.Revenue).ToString("N0"))</h3>Platform Revenue</div></div></div>
+<div class="col-md-2"><div class="card"><div class="card-body"><h3>@ViewBag.Bookings</h3>Bookings</div></div></div>
+<div class="col-md-2"><div class="card"><div class="card-body"><h3>@ViewBag.Hosts</h3>Approved Hosts</div></div></div></div>
+<h5>Recent activity</h5><table class="table"><tbody>@foreach (ActivityLog l in ViewBag.Recent) { <tr><td>@l.User?.Email</td><td>@l.Action</td><td>@l.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td></tr> }</tbody></table>
