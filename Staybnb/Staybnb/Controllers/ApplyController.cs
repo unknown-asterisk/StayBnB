@@ -18,16 +18,17 @@ public async Task<IActionResult> Create()
     return View(new ApplyVM());
 }
     [HttpPost]
-    public async Task<IActionResult> Create(ApplyVM vm, List<IFormFile> images)
+    public async Task<IActionResult> Create(ApplyVM vm, List<IFormFile> images, List<int> amenityIds)
     {
         var valid = images?.Where(FileHelper.IsValid).Where(i => !i.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase)).ToList() ?? new();
         if (valid.Count == 0) ModelState.AddModelError("images", "At least one property image is required. The application cannot be submitted without one.");
-        if (!ModelState.IsValid) return View(vm);
+        if (!ModelState.IsValid) { ViewBag.Amenities = await db.Amenities.ToListAsync(); return View(vm); }
 
         await using var tx = await db.Database.BeginTransactionAsync(); // property + images + application together
         var prop = new HostProperty { Title = vm.Title, Description = vm.Description, PricePerNight = vm.PricePerNight, CleaningFee = vm.CleaningFee,
             Address = vm.Address, City = vm.City, PropertyType = vm.PropertyType, MaxGuests = vm.MaxGuests, HostId = Uid, IsActive = false };
         foreach (var f in valid) prop.Images.Add(new PropertyImage { ImageUrl = "/uploads/properties/" + await FileHelper.SaveAsync(f, env, "properties") });
+        prop.Amenities = await db.Amenities.Where(a => (amenityIds ?? new List<int>()).Contains(a.Id)).ToListAsync();
         db.Properties.Add(prop);
         await db.SaveChangesAsync();
         db.HostApplications.Add(new HostApplication { ApplicationUserId = Uid, PropertyId = prop.Id });
