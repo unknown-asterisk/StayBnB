@@ -1,0 +1,11 @@
+@model ApplyVM
+@{ ViewData["Title"] = "Edit property"; }
+<div class="col-md-8 mx-auto"><h2>Edit property</h2>
+<form method="post"><div asp-validation-summary="All" class="text-danger"></div>
+<div class="mb-3"><label>Title</label><input asp-for="Title" class="form-control"/></div>
+<div class="mb-3"><label>Description</label><textarea asp-for="Description" class="form-control" rows="4"></textarea></div>
+<div class="row"><div class="col-md-6 mb-3"><label>City</label><input asp-for="City" class="form-control"/></div><div class="col-md-6 mb-3"><label>Address</label><input asp-for="Address" class="form-control"/></div></div>
+<div class="row"><div class="col-md-3 mb-3"><label>Price / night (R)</label><input asp-for="PricePerNight" class="form-control"/></div><div class="col-md-3 mb-3"><label>Cleaning fee (R)</label><input asp-for="CleaningFee" class="form-control"/></div>
+<div class="col-md-3 mb-3"><label>Max guests</label><input asp-for="MaxGuests" class="form-control"/></div>
+<div class="col-md-3 mb-3"><label>Type</label><select asp-for="PropertyType" class="form-select"><option>Apartment</option><option>House</option><option>Villa</option><option>Cabin</option><option>Cottage</option></select></div></div>
+<button class="btn btn-brand">Save changes</button> <a class="btn btn-link" asp-action="Properties">Cancel</a></form></div> 
