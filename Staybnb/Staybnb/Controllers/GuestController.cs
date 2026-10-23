@@ -52,6 +52,22 @@ public class GuestController(ApplicationDbContext db, IWebHostEnvironment env, I
         return RedirectToAction(nameof(Bookings));
     }
 
+    [HttpPost]
+public async Task<IActionResult> Review(int bookingId, int rating, string comment)
+{
+    var b = await db.Bookings.Include(x => x.Property).FirstOrDefaultAsync(x => x.Id == bookingId && x.GuestId == Uid);
+    if (b == null || b.Status != BookingStatus.CheckedIn || rating < 1 || rating > 5)
+    { TempData["Error"] = "You can only review a stay you have checked in to."; return RedirectToAction(nameof(Bookings)); }
+    if (await db.Reviews.AnyAsync(r => r.PropertyId == b.PropertyId && r.ReviewerId == Uid))
+    { TempData["Error"] = "You have already reviewed this property."; return RedirectToAction(nameof(Bookings)); }
+    db.Reviews.Add(new Review { PropertyId = b.PropertyId, ReviewerId = Uid, Rating = rating, Comment = comment });
+    await db.SaveChangesAsync();
+    await log.LogAsync(Uid, $"Review left for '{b.Property.Title}'", ActivityType.Property);
+    await notifier.NotifyAsync(b.Property.HostId, "New Review", $"A guest left a {rating}-star review on '{b.Property.Title}'.", NotificationType.Info);
+    TempData["Success"] = "Thanks for your review!";
+    return RedirectToAction(nameof(Bookings));
+}
+
     // Multi-step check-in: 1) read host rules/steps  2) upload ID/Passport  3) wait for host verification
     public async Task<IActionResult> CheckIn(int bookingId)
     {
