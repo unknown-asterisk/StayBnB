@@ -13,3 +13,4 @@ public class ApplyVM
     [Required] public string PropertyType { get; set; } = "Apartment";
     [Range(1, 50)] public int MaxGuests { get; set; } = 2;
 }
+public class ProfileVM { [Required] public string FirstName { get; set; } [Required] public string LastName { get; set; } }
