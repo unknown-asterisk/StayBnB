@@ -42,6 +42,29 @@ public class HostController(ApplicationDbContext db, IActivityLogger log, INotif
         return RedirectToAction(nameof(Properties));
     }
 
+    [HttpGet]
+public async Task<IActionResult> Edit(int id)
+{
+    var p = await db.Properties.FirstOrDefaultAsync(x => x.Id == id && x.HostId == Uid);
+    if (p == null) return NotFound();
+    return View(new ApplyVM { Title = p.Title, Description = p.Description, PricePerNight = p.PricePerNight, CleaningFee = p.CleaningFee,
+        Address = p.Address, City = p.City, PropertyType = p.PropertyType, MaxGuests = p.MaxGuests });
+}
+
+[HttpPost]
+public async Task<IActionResult> Edit(int id, ApplyVM vm)
+{
+    if (!ModelState.IsValid) return View(vm);
+    var p = await db.Properties.FirstOrDefaultAsync(x => x.Id == id && x.HostId == Uid);
+    if (p == null) return NotFound();
+    p.Title = vm.Title; p.Description = vm.Description; p.PricePerNight = vm.PricePerNight; p.CleaningFee = vm.CleaningFee;
+    p.Address = vm.Address; p.City = vm.City; p.PropertyType = vm.PropertyType; p.MaxGuests = vm.MaxGuests;
+    await db.SaveChangesAsync();
+    await log.LogAsync(Uid, $"Property '{p.Title}' edited", ActivityType.Property);
+    TempData["Success"] = "Property updated.";
+    return RedirectToAction(nameof(Properties));
+}
+
     public async Task<IActionResult> Bookings() =>
         View(await db.Bookings.Include(b => b.Property).Include(b => b.Guest).Where(b => b.Property.HostId == Uid).OrderByDescending(b => b.Id).ToListAsync());
 
