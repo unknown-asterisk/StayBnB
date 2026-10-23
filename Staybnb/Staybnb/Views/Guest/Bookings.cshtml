@@ -5,5 +5,7 @@
 @foreach (var b in Model) { <tr><td><a asp-controller="Properties" asp-action="Details" asp-route-id="@b.PropertyId">@b.Property.Title</a></td>
 <td>@b.CheckInDate.ToString("dd MMM") – @b.CheckOutDate.ToString("dd MMM yyyy")</td><td>@b.Guests</td><td>R @b.TotalPrice.ToString("N2")</td><td><span class="badge bg-secondary">@b.Status</span></td>
 <td class="text-end">@if (b.Status == BookingStatus.Approved || b.Status == BookingStatus.CheckedIn) { <a class="btn btn-sm btn-brand" asp-action="CheckIn" asp-route-bookingId="@b.Id">Check-in</a> }
-@if (b.Status == BookingStatus.Pending || b.Status == BookingStatus.Approved) { <form asp-action="Cancel" asp-route-id="@b.Id" method="post" class="d-inline"><button class="btn btn-sm btn-outline-danger">Cancel</button></form> }</td></tr> }
+@if (b.Status == BookingStatus.CheckedIn) { <form asp-action="Review" method="post" class="d-inline-flex gap-1"><input type="hidden" name="bookingId" value="@b.Id"/>
+<select name="rating" class="form-select form-select-sm w-auto">@for (int i = 5; i >= 1; i--) { <option value="@i">@i stars</option> }</select>
+<input name="comment" class="form-control form-control-sm" placeholder="Comment" maxlength="1000"/><button class="btn btn-sm btn-outline-secondary">Review</button></form> }
 </tbody></table>
